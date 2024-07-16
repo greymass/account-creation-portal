@@ -19,5 +19,6 @@
     "Failed to create account: {reason}": "Failed to create account: {reason}",
     "Error creating account": "Error creating account",
     "Error creating account: {reason}": "Error creating account: {reason}",
-    "Unknown error": "Unknown error"
+    "Unknown error": "Unknown error",
+    "You've either already received your free account or an account creation code has been sent to your email. To create additional accounts, please proceed with the purchase below.": "You've either already received your free account or an account creation code has been sent to your email. To create additional accounts, please proceed with the purchase below."
   }

@@ -111,7 +111,7 @@
     {:else}
       <div class="bg-yellow-100 border border-yellow-400 rounded-lg p-6 mb-4">
         <h3 class="text-xl font-semibold mb-2">{$t('Free Account Not Available')}</h3>
-        <p>{$t('You\'ve already received your free account. To create additional accounts, please proceed with the purchase below.')}</p>
+        <p>{$t('You\'ve either already received your free account or an account creation code has been sent to your email. To create additional accounts, please proceed with the purchase below.')}</p>
       </div>
     {/if}
 
