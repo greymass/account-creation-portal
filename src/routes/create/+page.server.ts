@@ -1,5 +1,7 @@
 import type { SextantError } from '$lib/sextant';
-import { redirect, type Load } from '@sveltejs/kit';
+import { redirect, type Load, type ServerLoad } from '@sveltejs/kit';
+
+const SEARCH_PARAMS_COOKIE = 'searchParamsCookie';
 
 function loadTicket(fetch: typeof window.fetch, ticket: string) {
     return fetch(`/api/ticket/${ticket}`).then(res => {
@@ -14,7 +16,7 @@ function loadTicket(fetch: typeof window.fetch, ticket: string) {
     })
 }
 
-export const load: Load = async ({ url, fetch }) => {
+export const load: ServerLoad = async ({ url, fetch, cookies }) => {
     const ticket = url.searchParams.get('ticket');
 
     if (!ticket) {
@@ -30,7 +32,21 @@ export const load: Load = async ({ url, fetch }) => {
         throw redirect(302, '/buy');
     }
 
-    if (!ticketData || !url.searchParams.get('owner_key') || !url.searchParams.get('active_key')) {
+    // Get current search params
+    let currentSearchParams = new URLSearchParams(url.searchParams);
+
+    // If owner_key or active_key are missing, try to get them from the cookie
+    if (!currentSearchParams.get('owner_key') || !currentSearchParams.get('active_key')) {
+        const storedParams = cookies.get(SEARCH_PARAMS_COOKIE);
+
+        if (storedParams) {
+            const cookieParams = new URLSearchParams(storedParams);
+            currentSearchParams.set('owner_key', cookieParams.get('owner_key')!);
+            currentSearchParams.set('active_key', cookieParams.get('active_key')!);
+        }
+    }
+
+    if (!ticketData || !currentSearchParams.get('owner_key') || !currentSearchParams.get('active_key')) {
         console.error('Missing keys so redirecting to buy page');
         throw redirect(302, '/buy');
     }
@@ -42,6 +58,6 @@ export const load: Load = async ({ url, fetch }) => {
     return {
         ticket,
         product: stripeProduct.product,
-        pageQueryString: url.searchParams.toString()
+        searchParams: currentSearchParams.toString()
     };
 };

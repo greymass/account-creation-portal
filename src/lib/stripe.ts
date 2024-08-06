@@ -1,12 +1,11 @@
 /** Stripe API helpers, backend only. */
 
 import Stripe from 'stripe'
-import { Bytes, Checksum256 } from '@wharfkit/antelope'
-import { CreateRequest, type CreateRequestArguments } from '@greymass/account-creation'
+import { type CreateRequestArguments } from '@greymass/account-creation'
 
-import { randomCode } from './helpers'
-import { BUOY_SERVICE_URL, STRIPE_ENDPOINT_SECRET, STRIPE_PRIVATE_KEY, STRIPE_PUBLIC_KEY } from '$env/static/private'
+import { STRIPE_ENDPOINT_SECRET, STRIPE_PRIVATE_KEY, STRIPE_PUBLIC_KEY } from '$env/static/private'
 import { PUBLIC_URL } from '$env/static/public'
+import { generateCreationRequest } from './sextant'
 
 /** Stripe API keys, public will be sent to frontend. */
 const keys = {
@@ -14,8 +13,6 @@ const keys = {
     public: STRIPE_PUBLIC_KEY,
     endpointSecret: STRIPE_ENDPOINT_SECRET
 }
-
-const buoyServiceUrl = new URL(BUOY_SERVICE_URL || 'https://cb.anchor.link')
 
 /** Public facing url for the service stripe will redirect back to. */
 const publicUrl = new URL(PUBLIC_URL || 'http://localhost:3000')
@@ -42,19 +39,20 @@ export async function listProducts(): Promise<Stripe.Product[]> {
     return products
 }
 
-export async function getProduct(productId: string) {
-    const products = await listProducts()
-    const product = await client.products.retrieve(productId)
+export async function getProduct(stripeProductId: string) {
+    const product = await client.products.retrieve(stripeProductId)
     if (!product.active || !product.metadata.sextant_id) {
         throw new Error('Product not found')
     }
-    const prices = await client.prices.list({ product: productId, limit: 99, active: true })
+    const prices = await client.prices.list({ product: stripeProductId, limit: 99, active: true })
     const price = prices.data[0]
     if (!price) {
         throw new Error('No price info')
     }
     return { product, price, key: keys.public }
 }
+
+
 
 export async function createSession(
     priceId: string,
@@ -65,28 +63,22 @@ export async function createSession(
     if (!price) {
         throw new Error('Price not found')
     }
+
     const product = price.product as Stripe.Product
     const sextantId = product.metadata.sextant_id
     if (!sextantId) {
         throw new Error('Product missing sextant_id')
     }
-    const code = randomCode()
-    const codeHash = Checksum256.hash(Bytes.from(code, 'utf8')).hexString
-    const loginUrl = `${buoyServiceUrl.origin}/${codeHash}`
 
-    const createRequest = CreateRequest.from({
-        ...createRequestArguments,
-        code,
-        login_url: loginUrl,
-    }).toString(false)
-
+    const createRequest = generateCreationRequest(createRequestArguments)
+    
     const session = await client.checkout.sessions.create({
         mode: 'payment',
         payment_method_types: ['card'],
-        success_url: `${publicUrl.origin}/success/${createRequest || ''}?${searchParams}`,
+        success_url: `${publicUrl.origin}/success/${createRequest.toString(false)}?${searchParams}`,
         cancel_url: `${publicUrl.origin}/buy?${searchParams}`,
         payment_intent_data: {
-            metadata: { code, request: createRequest, sextantId }
+            metadata: { code: createRequest.code, request: createRequest.toString(false), sextantId }
         },
         line_items: [
             {
@@ -94,7 +86,7 @@ export async function createSession(
                 quantity: 1
             }
         ],
-        metadata: { code, request: createRequest, sextantId }
+        metadata: { code: createRequest.code, request: createRequest.toString(false), sextantId }
     })
     return {
         sessionId: session.id,

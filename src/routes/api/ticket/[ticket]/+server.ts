@@ -10,7 +10,6 @@ export const GET: RequestHandler = async ({ params }) => {
 
         return json(result, { status: 200 })
     } catch (error) {
-        console.error('Error getting creation code:', error)
         if (error instanceof SextantError && error.code === 404) {
             return json({ error: 'Ticket not found' }, { status: 404 })
         }
