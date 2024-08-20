@@ -105,7 +105,9 @@
   </div>
 {:else if data.session}
   <div class="p-0 pt-6 space-y-12 sm:py-10 sm:px-5 sm:space-y-5">
-    <div class="block space-y-5 sm:flex justify-between items-center">
+    <div
+      class="block space-y-5 sm:flex sm:justify-between sm:items-center sm:space-y-0"
+    >
       <div class="space-y-3">
         <h3>
           {$t("Logged in as {name}", {
@@ -239,7 +241,7 @@
 {#if !data.canGetFreeAccount}
   <hr class="my-5" />
   <div
-    class="px-0 py-6 block space-y-5 sm:flex sm:justify-between sm:items-center sm:py-10 sm:px-5"
+    class="px-0 py-6 block space-y-5 sm:flex sm:justify-between sm:items-center sm:py-10 sm:px-5 sm:space-y-0"
   >
     <div class="space-y-3">
       <h3>{$t("Buy an account")}</h3>
