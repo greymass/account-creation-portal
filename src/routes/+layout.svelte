@@ -1,5 +1,6 @@
 <script lang="ts">
   import "../app.css";
+  import Container from "$lib/components/container.svelte";
 </script>
 
 <svelte:head>
@@ -14,6 +15,6 @@
   <title>Account Creation Portal</title>
 </svelte:head>
 
-<div class="container mx-auto p-4 max-w-md">
+<Container>
   <slot />
-</div>
+</Container>
