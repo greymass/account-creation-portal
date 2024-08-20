@@ -126,7 +126,6 @@
         {$t("Logout")}
       </button>
     </div>
-
     {#if condition_2_1}
       <div
         class="rounded-[20px] py-5 px-10 max-xs:p-6 bg-[#DEFFEB] dark:bg-[#003A16] border border-[#7DFFB3] dark:border-[#7DFFB3]"
@@ -238,6 +237,7 @@
   >
     <div class="space-y-3">
       <h3>{$t("Buy an account")}</h3>
+
       <p>"Create a productName for price</p>
     </div>
     <button

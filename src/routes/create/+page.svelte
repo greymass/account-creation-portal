@@ -198,7 +198,10 @@
           on:input={handleAccountNameInput}
           placeholder={$t("Enter account name")}
         />
-        <span class="absolute right-3 top-3 text-surface-500">.gm</span>
+        <span
+          class="absolute right-3 top-3 text-surface-500 dark:text-[var(--text-black)]"
+          >.gm</span
+        >
 
         {#if $error}
           <p
