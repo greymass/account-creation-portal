@@ -122,7 +122,7 @@
         on:click={handleLogout}
         class="btn-primary bg-[#FF0000] dark:bg-[#FF1A1A"
       >
-        {$t("Logout")}
+        {$t("Log out")}
       </button>
     </div>
 
