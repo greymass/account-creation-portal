@@ -52,7 +52,7 @@
 	];
 </script>
 
-<div class="px-5 py-10 max-sm:px-0 max-sm:pt-0 max-sm:pb-5">
+<div class="px-0 pt-0 pb-5 sm:px-5 sm:py-10">
 	<button
 		class="rounded-lg py-3 px-5 w-full flex justify-between items-center bg-[#ECF5FF] hover:bg-[#E2EDFF] active:bg-[#D7E4FF] focus:bg-[#E2EDFF] focus:ring-black focus:ring-2 dark:bg-[#161616] dark:hover:bg-[#20242D] dark:active:bg-[#2C3245] dark:focus:bg-[#20242D] dark:focus:ring-white"
 		on:click={() => {
