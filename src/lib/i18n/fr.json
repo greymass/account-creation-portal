@@ -1,5 +1,7 @@
 {
-  "Create New Account": "Créer un Nouveau Compte",
+  "Create New EOS Account": "Créer un nouveau compte EOS",
+  "Checking Login Status": "Vérification du statut de connexion",
+  "Please wait while we verify your login status...": "Veuillez patienter pendant que nous vérifions votre statut de connexion...",
   "To create an account using Anchor": "Pour créer un compte en utilisant Anchor",
   "To create an account using Anchor, please provide the following code:": "Pour créer un compte en utilisant Anchor, veuillez fournir le code suivant :",
   "Account Created Successfully!": "Compte Créé avec Succès !",

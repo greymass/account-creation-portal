@@ -1,5 +1,7 @@
 {
-  "Create New Account": "Create New Account",
+  "Create New EOS Account": "Create New EOS Account",
+  "Checking Login Status": "Checking Login Status",
+  "Please wait while we verify your login status...": "Please wait while we verify your login status...",
   "To create an account using Anchor": "To create an account using Anchor",
   "To create an account using Anchor, please provide the following code:": "To create an account using Anchor, please provide the following code:",
   "Account Created Successfully!": "Account Created Successfully!",
@@ -22,5 +24,6 @@
   "Unknown error": "Unknown error",
   "Sign in to get a free account": "Sign in to get a free account",
   "Free Account Unvailable": "Free Account Unvailable",
-  "You're not eligible for a free account at this time. You can purchase an account below, or sign in with another account.": "You're not eligible for a free account at this time. You can purchase an account below, or sign in with another account."
+  "You're not eligible for a free account at this time.": "You're not eligible for a free account at this time.",
+  "You can purchase an account below, or sign in with another account.": "You can purchase an account below, or sign in with another account."
 }
