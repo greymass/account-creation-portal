@@ -7,74 +7,81 @@
   import type { Session } from "@auth/sveltekit";
   import { t } from "../../lib/i18n";
 
-  interface CreateRequestArguments {
-    login_scope: string | null;
-    return_path: string | null;
-  }
+  // interface CreateRequestArguments {
+  //   login_scope: string | null;
+  //   return_path: string | null;
+  // }
 
-  interface PageData {
-    stripeProduct: StripeProduct;
-    createRequestArguments: CreateRequestArguments;
-    searchParams: string;
-    session: Session | null | undefined;
-    canGetFreeAccount: boolean;
-  }
+  // interface PageData {
+  //   stripeProduct: StripeProduct;
+  //   createRequestArguments: CreateRequestArguments;
+  //   searchParams: string;
+  //   session: Session | null | undefined;
+  //   canGetFreeAccount: boolean;
+  // }
 
-  export let data: PageData;
+  // export let data: PageData;
 
-  let buyError: string | undefined;
-  let isLoading = false;
+  // let buyError: string | undefined;
+  // let isLoading = false;
 
-  async function buy(): Promise<void> {
-    const body = JSON.stringify({
-      ...data.createRequestArguments,
-      id: data.stripeProduct.price.id,
-      searchParams: data.searchParams,
-    });
+  // async function buy(): Promise<void> {
+  //   const body = JSON.stringify({
+  //     ...data.createRequestArguments,
+  //     id: data.stripeProduct.price.id,
+  //     searchParams: data.searchParams,
+  //   });
 
-    const res = await fetch("/api/stripe/session", {
-      body,
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-    });
+  //   const res = await fetch("/api/stripe/session", {
+  //     body,
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //   });
 
-    if (!res.ok) {
-      throw new Error(await res.text());
-    }
+  //   if (!res.ok) {
+  //     throw new Error(await res.text());
+  //   }
 
-    const { session: stripeSession } = await res.json();
+  //   const { session: stripeSession } = await res.json();
 
-    const stripe = await loadStripe(data.stripeProduct.key);
+  //   const stripe = await loadStripe(data.stripeProduct.key);
 
-    if (stripe) {
-      await stripe.redirectToCheckout({ sessionId: stripeSession.sessionId });
-    }
-  }
+  //   if (stripe) {
+  //     await stripe.redirectToCheckout({ sessionId: stripeSession.sessionId });
+  //   }
+  // }
 
   function handleBuy(event: Event): void {
-    event.preventDefault();
-    buyError = undefined;
-    buy().catch((err: Error) => {
-      buyError = err.message;
-    });
+    //   event.preventDefault();
+    //   buyError = undefined;
+    //   buy().catch((err: Error) => {
+    //     buyError = err.message;
+    //   });
   }
 
-  function formatPrice(amount: number, currency = "USD"): string {
-    return (amount / 100).toLocaleString("en-US", {
-      style: "currency",
-      currency,
-    });
-  }
+  // function formatPrice(amount: number, currency = "USD"): string {
+  //   return (amount / 100).toLocaleString("en-US", {
+  //     style: "currency",
+  //     currency,
+  //   });
+  // }
 
   function handleLogout() {
-    signOut({ callbackUrl: "/buy" });
+    //   signOut({ callbackUrl: "/buy" });
   }
 
   function handleGetFreeAccount(event: SubmitEvent) {
-    isLoading = true;
-    // The form will handle the POST request
-    // We're just setting isLoading to true here
+    //   isLoading = true;
+    //   // The form will handle the POST request
+    //   // We're just setting isLoading to true here
   }
+  const condition_1 = false;
+  const condition_2 = true;
+  const condition_2_1 = false;
+  const condition_10 = false;
+
+  let isLoading = true;
+  let buyError: string | undefined;
 </script>
 
 <div class="pt-20 pb-10 max-xs:pb-6 max-xs:pt-10">
@@ -91,10 +98,10 @@
   <h1 class="text-center mt-5">{$t("Create New EOS Account")}</h1>
 </div>
 
-{#if data.session === undefined}
-  <div class="py-10 px-5 max-xs:px-0">
+{#if condition_1}
+  <div class="py-10 px-5 max-xs:p-0 max-xs:pt-6">
     <div
-      class="space-y-2 text-center rounded-lg ring-1 ring-slate-700/5 shadow py-5 px-10 dark:bg-slate-800"
+      class="space-y-2 text-center rounded-lg ring-1 ring-slate-700/5 shadow py-5 px-10 max-xs:p-6 dark:bg-slate-800"
     >
       <h3>{$t("Checking Login Status")}</h3>
       <div
@@ -103,20 +110,14 @@
       <p>{$t("Please wait while we verify your login status...")}</p>
     </div>
   </div>
-{:else if data.session}
-  <div class="py-10 px-5 space-y-5 max-xs:p-0 max-xs:space-y-6">
+{:else if condition_2}
+  <div class="py-10 px-5 space-y-5 max-xs:p-0 max-xs:pt-6 max-xs:space-y-12">
     <div
       class="flex max-xs:block max-xs:space-y-5 justify-between items-center"
     >
       <div class="space-y-3">
-        <h3>
-          {$t("Logged in as {name}", {
-            name: data.session.user?.name ?? "",
-          })}
-        </h3>
-        {#if data.session.user?.name !== data.session.user?.email}
-          <p>{data.session.user?.email}</p>
-        {/if}
+        <h3>Logged in as ttwishing</h3>
+        <p>ttwishing@gmail.com</p>
       </div>
       <button
         on:click={handleLogout}
@@ -126,7 +127,7 @@
       </button>
     </div>
 
-    {#if data.canGetFreeAccount}
+    {#if condition_2_1}
       <div
         class="rounded-[20px] py-5 px-10 max-xs:p-6 bg-[#DEFFEB] dark:bg-[#003A16] border border-[#7DFFB3] dark:border-[#7DFFB3]"
       >
@@ -138,11 +139,7 @@
             </p>
           </div>
           <form method="POST" action="/ticket" on:submit={handleGetFreeAccount}>
-            <input
-              type="hidden"
-              name="searchParams"
-              value={data.searchParams}
-            />
+            <input type="hidden" name="searchParams" value="test" />
             <button
               type="submit"
               class="btn-primary flex items-center justify-center w-full bg-[#00B44B] dark:bg-[#00CD55]"
@@ -184,8 +181,6 @@
       class="flex justify-between items-center space-x-5 max-xs:block max-xs:space-x-0 max-xs:space-y-4"
     >
       <button
-        on:click={() =>
-          signIn("google", { callbackUrl: `/buy?${data.searchParams}` })}
         class="flex items-center justify-center btn-white w-full text-xl font-medium drop-shadow"
       >
         <svg
@@ -220,8 +215,6 @@
         {$t("Continue with Google")}
       </button>
       <button
-        on:click={() =>
-          signIn("apple", { callbackUrl: `/buy?${data.searchParams}` })}
         class="flex items-center justify-center btn-black text-xl font-medium drop-shadow w-full"
       >
         <svg
@@ -238,22 +231,14 @@
   </div>
 {/if}
 
-{#if !data.canGetFreeAccount}
+{#if condition_10}
   <hr class="my-5" />
   <div
     class="flex justify-between items-center py-10 px-5 max-xs:px-0 max-xs:py-6 max-xs:block max-xs:space-y-5"
   >
     <div class="space-y-3">
       <h3>{$t("Buy an account")}</h3>
-      <p>
-        {$t("Create a {productName} for {price}", {
-          productName: data.stripeProduct.product.name,
-          price: formatPrice(
-            data.stripeProduct.price.unit_amount,
-            data.stripeProduct.price.currency,
-          ),
-        })}
-      </p>
+      <p>"Create a productName for price</p>
     </div>
     <button
       on:click={handleBuy}
