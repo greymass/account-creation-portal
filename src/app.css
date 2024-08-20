@@ -18,7 +18,7 @@
         @apply text-[1.75rem];
         @apply leading-[2.125rem];
         @apply font-semibold;
-        @apply max-xs:text-2xl;
+        @apply max-sm:text-2xl;
     }
 
     h2 {
