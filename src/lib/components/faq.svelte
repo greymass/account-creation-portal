@@ -54,7 +54,7 @@
 
 <div class="px-0 pt-0 pb-5 sm:px-5 sm:py-10">
 	<button
-		class="rounded-lg py-3 px-5 w-full flex justify-between items-center bg-[#ECF5FF] hover:bg-[#E2EDFF] active:bg-[#D7E4FF] focus:bg-[#E2EDFF] focus:ring-black focus:ring-2 dark:bg-[#161616] dark:hover:bg-[#20242D] dark:active:bg-[#2C3245] dark:focus:bg-[#20242D] dark:focus:ring-white"
+		class="rounded-lg py-3 px-5 w-full flex justify-between items-center bg-[#ECF5FF] hover:bg-[#E2EDFF] active:bg-[#D7E4FF] focus:bg-[#E2EDFF] dark:bg-[#161616] dark:hover:bg-[#20242D] dark:active:bg-[#2C3245] dark:focus:bg-[#20242D]"
 		on:click={() => {
 			faqExpanded = !faqExpanded;
 		}}
@@ -63,8 +63,8 @@
 		<svg
 			viewBox="0 0 13 7"
 			class="float-right w-[13px] y-[7px] fill-black dark:fill-white {faqExpanded
-				? 'rotate-0 duration-150'
-				: '-rotate-180 duration-150'}"
+				? 'rotate-0'
+				: 'rotate-180'} duration-150"
 		>
 			<path d="M0.698303 7L6.84912 0.849182L12.9999 7H0.698303Z" />
 		</svg>
