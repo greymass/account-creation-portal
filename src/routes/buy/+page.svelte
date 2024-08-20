@@ -77,7 +77,7 @@
   }
 </script>
 
-<div class="pt-20 pb-10 max-xs:pb-6 max-xs:pt-10">
+<div class="pt-20 pb-10 max-sm:pb-6 max-sm:pt-10">
   <svg
     viewBox="0 0 68 96"
     class="w-[68px] h-[96px] m-auto fill-[#111111] dark:fill-white"
@@ -92,9 +92,9 @@
 </div>
 
 {#if data.session === undefined}
-  <div class="py-10 px-5 max-xs:p-0 max-xs:pt-6">
+  <div class="py-10 px-5 max-sm:p-0 max-sm:pt-6">
     <div
-      class="space-y-2 text-center rounded-lg ring-1 ring-slate-700/5 shadow py-5 px-10 max-xs:p-6 dark:bg-slate-800"
+      class="space-y-2 text-center rounded-lg ring-1 ring-slate-700/5 shadow py-5 px-10 max-sm:p-6 dark:bg-slate-800"
     >
       <h3>{$t("Checking Login Status")}</h3>
       <div
@@ -104,9 +104,9 @@
     </div>
   </div>
 {:else if data.session}
-  <div class="py-10 px-5 space-y-5 max-xs:p-0 max-xs:pt-6 max-xs:space-y-12">
+  <div class="py-10 px-5 space-y-5 max-sm:p-0 max-sm:pt-6 max-sm:space-y-12">
     <div
-      class="flex max-xs:block max-xs:space-y-5 justify-between items-center"
+      class="flex max-sm:block max-sm:space-y-5 justify-between items-center"
     >
       <div class="space-y-3">
         <h3>
@@ -120,7 +120,7 @@
       </div>
       <button
         on:click={handleLogout}
-        class="btn-primary max-xs:w-full bg-[#FF0000] dark:bg-[#FF1A1A"
+        class="btn-primary max-sm:w-full bg-[#FF0000] dark:bg-[#FF1A1A"
       >
         {$t("Logout")}
       </button>
@@ -128,7 +128,7 @@
 
     {#if data.canGetFreeAccount}
       <div
-        class="rounded-[20px] py-5 px-10 max-xs:p-6 bg-[#DEFFEB] dark:bg-[#003A16] border border-[#7DFFB3] dark:border-[#7DFFB3]"
+        class="rounded-[20px] py-5 px-10 max-sm:p-6 bg-[#DEFFEB] dark:bg-[#003A16] border border-[#7DFFB3] dark:border-[#7DFFB3]"
       >
         <div class="space-y-5 text-center">
           <div>
@@ -163,7 +163,7 @@
       </div>
     {:else}
       <div
-        class="rounded-[20px] py-5 px-10 max-xs:p-6 bg-[#FFE6B1] border border-[#FFAD00] dark:bg-[#674600] dark:border-[#FFB61A]"
+        class="rounded-[20px] py-5 px-10 max-sm:p-6 bg-[#FFE6B1] border border-[#FFAD00] dark:bg-[#674600] dark:border-[#FFB61A]"
       >
         <h3>{$t("Free Account Unvailable")}</h3>
         <p class="mt-2">
@@ -178,10 +178,10 @@
     {/if}
   </div>
 {:else}
-  <div class="py-10 px-5 space-y-5 max-xs:px-0 max-xs:py-6">
+  <div class="py-10 px-5 space-y-5 max-sm:px-0 max-sm:py-6">
     <h3>{$t("Sign in to get a free account")}</h3>
     <div
-      class="flex justify-between items-center space-x-5 max-xs:block max-xs:space-x-0 max-xs:space-y-4"
+      class="flex justify-between items-center space-x-5 max-sm:block max-sm:space-x-0 max-sm:space-y-4"
     >
       <button
         on:click={() =>
@@ -241,7 +241,7 @@
 {#if !data.canGetFreeAccount}
   <hr class="my-5" />
   <div
-    class="flex justify-between items-center py-10 px-5 max-xs:px-0 max-xs:py-6 max-xs:block max-xs:space-y-5"
+    class="flex justify-between items-center py-10 px-5 max-sm:px-0 max-sm:py-6 max-sm:block max-sm:space-y-5"
   >
     <div class="space-y-3">
       <h3>{$t("Buy an account")}</h3>
@@ -257,7 +257,7 @@
     </div>
     <button
       on:click={handleBuy}
-      class="max-xs:w-full btn-primary bg-[#2D8EFF] dark:bg-[#479DFF]"
+      class="max-sm:w-full btn-primary bg-[#2D8EFF] dark:bg-[#479DFF]"
     >
       {$t("Continue to Payment")} &rarr;
     </button>

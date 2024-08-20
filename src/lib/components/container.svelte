@@ -7,7 +7,7 @@
 			class="bg-[url('/images/creation-right-bg.jpg')] h-10 bg-cover bg-no-repeat bg-center xl:hidden"
 		/>
 		<div class="flex-1 flex justify-center">
-			<div class="px-[60px] max-xs:px-6 w-[820px]">
+			<div class="px-[60px] max-sm:px-6 w-[820px]">
 				<slot />
 			</div>
 		</div>
