@@ -1,3 +1,60 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+    --text-black: #111111;
+}
+
+@layer base {
+    body {
+        @apply bg-white;
+        @apply dark:bg-[#0D0D0D];
+        @apply text-[var(--text-black)];
+        @apply dark:text-white;
+    }
+
+    h1 {
+        @apply text-[1.75rem];
+        @apply leading-[2.125rem];
+        @apply font-semibold;
+        @apply max-xs:text-2xl;
+    }
+
+    h2 {
+        @apply text-2xl;
+        @apply font-semibold;
+    }
+
+    h3 {
+        @apply text-xl;
+        @apply font-semibold;
+    }
+
+    p {
+        @apply text-base;
+    }
+}
+
+@layer components {
+    .btn-primary {
+        @apply relative min-w-60 p-3 text-lg font-semibold text-white whitespace-nowrap rounded-xl disabled:opacity-50 disabled:cursor-not-allowed bg-[#2D8EFF] dark:bg-[#479DFF] hover:after:content-[''] hover:after:rounded-xl hover:after:absolute hover:after:w-full hover:after:h-full hover:after:top-0 hover:after:left-0 hover:after:bg-black/10 dark:hover:after:bg-white/10 active:after:content-[''] active:after:rounded-xl active:after:absolute active:after:w-full active:after:h-full active:after:top-0 active:after:left-0 active:after:bg-black/20 dark:active:after:bg-white/20 focus:after:content-[''] focus:after:rounded-xl focus:after:absolute focus:after:w-full focus:after:h-full focus:after:top-0 focus:after:left-0 focus:after:bg-black/10 dark:focus:after:bg-white/10 focus:ring-2 focus:ring-black dark:focus:ring-white transition duration-300
+    }
+
+    .btn-white {
+        @apply relative min-w-60 p-3 text-lg font-semibold whitespace-nowrap rounded-xl disabled:opacity-50 disabled:cursor-not-allowed bg-white text-black/55 hover:after:content-[''] hover:after:rounded-xl hover:after:absolute hover:after:w-full hover:after:h-full hover:after:top-0 hover:after:left-0 hover:after:bg-black/10 active:after:content-[''] active:after:rounded-xl active:after:absolute active:after:w-full active:after:h-full active:after:top-0 active:after:left-0 active:after:bg-black/20 focus:after:content-[''] focus:after:rounded-xl focus:after:absolute focus:after:w-full focus:after:h-full focus:after:top-0 focus:after:left-0 focus:after:bg-black/10 focus:ring-2 focus:ring-black dark:focus:ring-white transition duration-300
+    }
+
+    .btn-black {
+        @apply relative min-w-60 p-3 text-lg font-semibold whitespace-nowrap rounded-xl disabled:opacity-50 disabled:cursor-not-allowed bg-black dark:bg-white text-white dark:text-[var(--text-black)] hover:after:content-[''] hover:after:rounded-xl hover:after:absolute hover:after:w-full hover:after:h-full hover:after:top-0 hover:after:left-0 hover:after:bg-white/10 dark:hover:after:bg-black/10 active:after:content-[''] active:after:rounded-xl active:after:absolute active:after:w-full active:after:h-full active:after:top-0 active:after:left-0 active:after:bg-white/20 dark:active:after:bg-black/20 focus:after:content-[''] focus:after:rounded-xl focus:after:absolute focus:after:w-full focus:after:h-full focus:after:top-0 focus:after:left-0 focus:after:bg-white/10 dark:focus:after:bg-black/10 focus:ring-2 focus:ring-black dark:focus:ring-white transition duration-300
+    }
+
+    hr:not(.divider) {
+        @apply h-[1px];
+        @apply border-0;
+        @apply border-t-0;
+        @apply bg-[#D9D9D9];
+        @apply dark:bg-[#333333]
+    }
+
+}
