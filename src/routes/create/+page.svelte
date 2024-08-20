@@ -4,7 +4,7 @@
   import { fade, fly } from "svelte/transition";
   import type { Product } from "$lib/types";
   import { t } from "$lib/i18n";
-  import { Check, AlertCircle, Loader2 } from "lucide-svelte";
+  import { Check, AlertCircle, CircleCheck, Loader2 } from "lucide-svelte";
 
   interface PageData {
     code: string;
@@ -151,15 +151,13 @@
   }
 </script>
 
-<div
-  class="container mx-auto max-w-md p-4 min-h-screen flex items-center justify-center"
->
+<div class="mx-auto max-w-md p-4 flex items-center justify-center h-full">
   {#if $keysMissing}
     <div
-      class="bg-surface-100-800-token p-6 rounded-lg shadow-lg w-full"
+      class="bg-surface-100-800-token p-6 rounded-lg shadow-lg w-full ring-1 ring-slate-900/5 dark:bg-slate-800"
       in:fade={{ duration: 300 }}
     >
-      <h2 class="text-2xl font-bold mb-4">
+      <h2 class="mb-4">
         {$t("To create an account using Anchor")}
       </h2>
       <p class="mb-4">
@@ -172,7 +170,7 @@
     </div>
   {:else if $accountCreated}
     <div
-      class="bg-surface-100-800-token p-8 rounded-lg shadow-lg flex flex-col items-center text-center w-full"
+      class="bg-surface-100-800-token p-8 rounded-lg shadow-lg flex flex-col items-center text-center w-full ring-1 ring-slate-900/5 dark:bg-slate-800"
       in:fly={{ y: 20, duration: 500 }}
     >
       <div
@@ -180,7 +178,7 @@
       >
         <Check size={48} />
       </div>
-      <h2 class="text-3xl font-bold mb-4">
+      <h2 class="mb-4">
         {$t("Account Created Successfully!")}
       </h2>
       <p class="mb-4">
@@ -191,21 +189,24 @@
     </div>
   {:else}
     <div
-      class="bg-surface-100-800-token p-6 rounded-lg shadow-lg w-full"
+      class="bg-surface-100-800-token p-6 rounded-lg shadow-lg w-full ring-1 ring-slate-900/5 dark:bg-slate-800"
       in:fade={{ duration: 300 }}
     >
-      <h1 class="text-3xl font-bold mb-6">{$t("Create New Account")}</h1>
+      <h1 class="mb-6">{$t("Create New Account")}</h1>
 
       <p class="mb-4">{$t("Enter the desired EOS account name:")}</p>
 
       <div class="mb-6 relative">
         <input
           type="text"
-          class="w-full p-3 pr-20 border border-surface-300-600-token rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+          class="w-full p-3 pr-20 border border-surface-300-600-token rounded-md focus:ring-2 focus:ring-[#2D8EFF] focus:border-[#[#2D8EFF]] transition-all duration-300 dark:text-[var(--text-black)]"
           on:input={handleAccountNameInput}
           placeholder={$t("Enter account name")}
         />
-        <span class="absolute right-3 top-3 text-surface-500">.gm</span>
+        <span
+          class="absolute right-3 top-3 text-surface-500 dark:text-[var(--text-black)]"
+          >.gm</span
+        >
 
         {#if $error}
           <p
@@ -225,7 +226,7 @@
             in:fly={{ y: -10, duration: 300 }}
           >
             {#if $nameAvailable}
-              <Check size={16} class="mr-1" />
+              <CircleCheck size={16} class="mr-1" />
               {$t("This account name is available.")}
             {:else}
               <AlertCircle size={16} class="mr-1" />
@@ -236,7 +237,7 @@
       </div>
 
       <button
-        class="w-full px-4 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+        class="btn-primary w-full flex items-center justify-center"
         on:click={handleConfirm}
         disabled={$loading || $creatingAccount || !$nameAvailable}
       >
