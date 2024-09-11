@@ -34,7 +34,7 @@
 		{
 			title: $t("Are EOS accounts free?"),
 			content: $t(
-				"Yes, you can create multiple EOS accounts, but each requires a separate creation process.",
+				"Some platforms offer free account creation, while others may charge a small fee.",
 			),
 		},
 		{
