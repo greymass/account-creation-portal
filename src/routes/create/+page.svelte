@@ -63,7 +63,6 @@
   //     if (!result.ok) {
   //       throw new Error($t("Failed to check account name availability"));
   //     }
-
   //     const { nameAvailable: availability } = await result.json();
 
   //     nameAvailable.set(availability);

@@ -1,10 +1,9 @@
 <script lang="ts">
   import FAQ from "$lib/components/faq.svelte";
-
-  import type { StripeProduct } from "$lib/types";
-  import { loadStripe } from "@stripe/stripe-js";
-  import { signIn, signOut } from "@auth/sveltekit/client";
-  import type { Session } from "@auth/sveltekit";
+  // import type { StripeProduct } from "$lib/types";
+  // import { loadStripe } from "@stripe/stripe-js";
+  // import { signIn, signOut } from "@auth/sveltekit/client";
+  // import type { Session } from "@auth/sveltekit";
   import { t } from "../../lib/i18n";
 
   // interface CreateRequestArguments {
@@ -112,7 +111,9 @@
   </div>
 {:else if condition_2}
   <div class="p-0 pt-6 space-y-12 sm:py-10 sm:px-5 sm:space-y-5">
-    <div class="block space-y-5 sm:flex justify-between items-center">
+    <div
+      class="block space-y-5 sm:flex sm:justify-between sm:items-center sm:space-y-0"
+    >
       <div class="space-y-3">
         <h3>Logged in as ttwishing</h3>
         <p>ttwishing@gmail.com</p>
@@ -175,7 +176,7 @@
   <div class="px-0 py-6 sm:py-10 sm:px-5 space-y-5">
     <h3>{$t("Sign in to get a free account")}</h3>
     <div
-      class="block space-x-0 space-y-4 sm:flex sm:justify-between sm:items-center sm:space-x-5"
+      class="block space-x-0 space-y-4 sm:flex sm:justify-between sm:items-center sm:space-x-5 sm:space-y-0"
     >
       <button
         class="flex items-center justify-center btn-white w-full text-xl font-medium drop-shadow"
@@ -231,7 +232,7 @@
 {#if condition_10}
   <hr class="my-5" />
   <div
-    class="px-0 py-6 block space-y-5 sm:flex sm:justify-between sm:items-center sm:py-10 sm:px-5"
+    class="px-0 py-6 block space-y-5 sm:flex sm:justify-between sm:items-center sm:py-10 sm:px-5 sm:space-y-0"
   >
     <div class="space-y-3">
       <h3>{$t("Buy an account")}</h3>
