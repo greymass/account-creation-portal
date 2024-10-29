@@ -32,6 +32,7 @@ const authHandle = SvelteKitAuth({
       clientId: AUTH_APPLE_ID,
       clientSecret: AUTH_APPLE_SECRET,
       redirectProxyUrl: `${redirectUrl}/auth/callback/apple`,
+      usePKCE: false,
     })
   ],
   secret: AUTH_SECRET,
@@ -47,17 +48,31 @@ const appleAuthenticationHandle: Handle = async ({ event, resolve }) => {
     }
 
     try {
+      console.log('Exchanging code for tokens...');
       const { id_token, access_token, refresh_token } = await exchangeCodeForTokens(code);
-      const decodedToken = await parseIdToken(id_token);
-      const sessionToken = createSessionToken(decodedToken, access_token, refresh_token);
-      const { cookie } = await encodeCookies(sessionToken);
+      console.log('Received tokens:', { id_token, access_token, refresh_token });
 
+      console.log('Parsing ID token...');
+      const decodedToken = await parseIdToken(id_token);
+      console.log('Decoded token:', decodedToken);
+
+      console.log('Creating session token...');
+      const sessionToken = createSessionToken(decodedToken, access_token, refresh_token);
+      console.log('Created session token:', sessionToken);
+
+      console.log('Encoding cookies...');
+      const { cookie } = await encodeCookies(sessionToken);
+      console.log('Cookie details:', cookie);
+
+      console.log('Setting cookie in event...');
       event.cookies.set(cookie.name, cookie.value, cookie.options);
 
-      // Resolve the event to ensure cookies are set
+      console.log('Resolving event to ensure cookies are set...');
       await resolve(event);
+      console.log('Event resolved successfully');
 
     } catch (err) {
+      console.error('Error during Apple sign-in:', err);
       throw error(500, 'Error processing Apple sign-in');
     }
 
