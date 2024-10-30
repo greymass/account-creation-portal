@@ -1,24 +1,43 @@
-import { SvelteKitAuth } from "@auth/sveltekit"
-import Google from "@auth/sveltekit/providers/google"
-import Apple from "@auth/sveltekit/providers/apple"
-import { 
-  AUTH_GOOGLE_ID, 
-  AUTH_GOOGLE_SECRET, 
-  AUTH_APPLE_ID, 
-  AUTH_APPLE_SECRET, 
-  AUTH_SECRET, 
-  AUTH_REDIRECT_URL 
-} from "$env/static/private"
-import { error, redirect, type Handle } from '@sveltejs/kit';
-import { sequence } from '@sveltejs/kit/hooks';
-import { 
-  exchangeCodeForTokens, 
-  createSessionToken, 
-  parseIdToken,
-  encodeCookies
-} from '$lib/apple';
+import { SvelteKitAuth } from "@auth/sveltekit";
+import Google from "@auth/sveltekit/providers/google";
+import type { OAuthConfig, OAuthUserConfig } from "@auth/core/providers";
+import { error, redirect, type Handle } from "@sveltejs/kit";
+import { sequence } from "@sveltejs/kit/hooks";
+import { exchangeCodeForTokens, createSessionToken, parseIdToken, encodeCookies } from "$lib/apple";
+import { AUTH_GOOGLE_ID, AUTH_GOOGLE_SECRET, AUTH_APPLE_ID, AUTH_APPLE_SECRET, AUTH_SECRET, AUTH_REDIRECT_URL } from "$env/static/private";
 
-const redirectUrl = AUTH_REDIRECT_URL || "http://localhost:3000"
+function CustomAppleProvider<P>(options: OAuthUserConfig<P>): OAuthConfig<P> {
+  return {
+    id: "apple",
+    name: "Apple",
+    type: "oauth",
+    issuer: "https://appleid.apple.com", // Add issuer
+    authorization: {
+      url: "https://appleid.apple.com/auth/authorize",
+      params: {
+        scope: "name email",
+        response_mode: "form_post",
+        // Exclude code_challenge and code_challenge_method
+      },
+    },
+    token: "https://appleid.apple.com/auth/token", // Add token endpoint
+    clientId: options.clientId,
+    clientSecret: options.clientSecret,
+    idToken: true,
+    checks: ["state"], // Remove "pkce" to disable PKCE checks
+    profile(profile) {
+      return {
+        id: profile.sub,
+        name: profile.name,
+        email: profile.email,
+        image: null,
+      };
+    },
+    ...options,
+  };
+}
+
+const redirectUrl = AUTH_REDIRECT_URL || "http://localhost:3000";
 
 const authHandle = SvelteKitAuth({
   trustHost: true,
@@ -28,15 +47,14 @@ const authHandle = SvelteKitAuth({
       clientSecret: AUTH_GOOGLE_SECRET,
       redirectProxyUrl: `${redirectUrl}/auth/callback/google`,
     }),
-    Apple({
+    CustomAppleProvider({
       clientId: AUTH_APPLE_ID,
       clientSecret: AUTH_APPLE_SECRET,
       redirectProxyUrl: `${redirectUrl}/auth/callback/apple`,
-      usePKCE: false,
-    })
+    }),
   ],
   secret: AUTH_SECRET,
-})
+});
 
 const appleAuthenticationHandle: Handle = async ({ event, resolve }) => {
   if (event.url.pathname === '/auth/callback/apple' && event.request.method === 'POST') {
