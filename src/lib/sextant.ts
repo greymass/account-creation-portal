@@ -1,15 +1,18 @@
 /** Sextant API helpers, backend only. */
 
-import { Bytes, PrivateKey } from '@wharfkit/antelope'
-import { SEXTANT_URL, SEXTANT_UUID, SEXTANT_KEY, ACCOUNT_CREATOR_VERSION } from '$env/static/private'
+import { Bytes, Checksum256, PrivateKey } from '@wharfkit/antelope'
+import { SEXTANT_URL, SEXTANT_DEVICE_UUID, SEXTANT_KEY, ACCOUNT_CREATOR_VERSION, BUOY_SERVICE_URL, STRIPE_PRODUCT_ID, SEXTANT_PRODUCT_ID } from '$env/static/private'
 import type { NameType, PublicKeyType } from '@wharfkit/antelope'
-import { CreateRequest, type CreateRequestType } from '@greymass/account-creation'
+import { CreateRequest, type CreateRequestArguments, type CreateRequestType } from '@greymass/account-creation'
+import { randomCode } from './helpers'
+import { getProduct } from './stripe'
 
 const sextantUrl = SEXTANT_URL || 'http://localhost:8080'
-const sextantUUID = SEXTANT_UUID || '8273DBFA-D91F-4C65-A8A3-0D9325B5E99C'
+const sextantDeviceUUID = SEXTANT_DEVICE_UUID || '8273DBFA-D91F-4C65-A8A3-0D9325B5E99C'
 const sextantKey = PrivateKey.from(SEXTANT_KEY || 'PVT_K1_2VbtWei9iPNJWDkzSdrJG1BHEyftwPWeJVnyaKxzi4hkjVX2fF')
-
+const buoyServiceUrl = new URL(BUOY_SERVICE_URL || 'https://cb.anchor.link')
 const accountCreatorVersion = ACCOUNT_CREATOR_VERSION || 'account-creation-portal'
+const stripeProductId = STRIPE_PRODUCT_ID
 
 export class SextantError extends Error {
     code: number
@@ -21,18 +24,38 @@ export class SextantError extends Error {
     }
 }
 
-async function sextantApiCall<T = any>(path: string, data: any): Promise<T | undefined> {
-    const body = Bytes.from(JSON.stringify(data), 'utf8')
-    const signature = sextantKey.signMessage(body)
-
+function generateCurlFromSextantApiCall(path: string, data: any, sextantUrl: string, sextantKey: any): string {
+    const body = Bytes.from(JSON.stringify(data), 'utf8');
+    const signature = sextantKey.signMessage(body);
+  
+    let curlCommand = `curl '${sextantUrl}${path}'`;
+  
+    // Method
+    curlCommand += ` -X POST`;
+  
+    // Headers
+    curlCommand += ` -H 'Content-Type: application/json'`;
+    curlCommand += ` -H 'X-Request-Sig: ${String(signature)}'`;
+  
+    // Body
+    curlCommand += ` -d '${JSON.stringify(data)}'`;
+  
+    return curlCommand;
+  }
+  
+  // Usage example
+  async function sextantApiCall<T = any>(path: string, data: any): Promise<T | undefined> {
+    const body = Bytes.from(JSON.stringify(data), 'utf8');
+    const signature = sextantKey.signMessage(body);
+    
     const response = await fetch(sextantUrl + path, {
-        body: JSON.stringify(data),
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-Request-Sig': String(signature)
-        }
-    })
+      body: JSON.stringify(data),
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Request-Sig': String(signature)
+      }
+    });
 
     if (response?.status !== 200) {
         let errorData: any
@@ -51,11 +74,12 @@ async function sextantApiCall<T = any>(path: string, data: any): Promise<T | und
     }
 }
 
-export async function createTicket(code: string, productId: string, comment: string) {
+export async function createTicket(code: string, productId: string, comment: string, email?: string) {
     await sextantApiCall('/tickets/new', {
         code,
         productId,
-        comment
+        comment,
+        email,
     })
 }
 
@@ -63,7 +87,7 @@ export async function verifyTicket(payload: CreateRequestType) {
     const request = CreateRequest.from(payload)
     const ticket = await sextantApiCall('/tickets/verify', {
         code: request.code,
-        deviceId: sextantUUID,
+        deviceId: sextantDeviceUUID,
         version: accountCreatorVersion
     })
 
@@ -77,7 +101,7 @@ export async function checkAccountName(productId: string, accountName: NameType,
         await sextantApiCall('/tickets/check', {
             name: String(accountName),
             code: createRequest.code,
-            deviceId: sextantUUID,
+            deviceId: sextantDeviceUUID,
             productId,
             version: accountCreatorVersion
         })
@@ -86,6 +110,19 @@ export async function checkAccountName(productId: string, accountName: NameType,
     }
 
     return { nameAvailable: true }
+}
+
+export async function freeAccountAvailable(email: string) {
+    try {
+        await sextantApiCall('/tickets/free', {
+            email
+        })
+
+        return true
+    }
+    catch (error: unknown) {
+        return false
+    }
 }
 
 export interface CreateAccountRequest {
@@ -108,8 +145,29 @@ export function createAccount(payload: CreateAccountRequest) {
         activeKey: String(payload.activeKey),
         ownerKey: String(payload.ownerKey),
         accountName: String(payload.accountName),
-        deviceId: sextantUUID,
+        deviceId: sextantDeviceUUID,
         version: accountCreatorVersion,
         code,
     })
+}
+
+export function generateCreationRequest(createRequestArguments: Partial<CreateRequestArguments> = {}) {
+    const code = randomCode()
+    const codeHash = Checksum256.hash(Bytes.from(code, 'utf8')).hexString
+    const loginUrl = `${buoyServiceUrl.origin}/${codeHash}`
+
+    return CreateRequest.from({
+        ...createRequestArguments,
+        code,
+        login_url: loginUrl,
+    })
+}
+
+export async function getSextantProductId() {
+    if (SEXTANT_PRODUCT_ID) {
+        return SEXTANT_PRODUCT_ID
+    }
+    const stripeProduct = await getProduct(stripeProductId)
+
+    return stripeProduct.product.metadata.sextant_id
 }
