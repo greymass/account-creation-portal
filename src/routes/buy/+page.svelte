@@ -158,7 +158,7 @@
       <div
         class="rounded-[20px] p-6 sm:py-5 sm:px-10 bg-[#FFE6B1] border border-[#FFAD00] dark:bg-[#674600] dark:border-[#FFB61A]"
       >
-        <h3>{$t("Free Account Unvailable")}</h3>
+        <h3>{$t("Free Account Unavailable")}</h3>
         <p class="mt-2">
           {$t("You're not eligible for a free account at this time.")}
         </p>
