@@ -47,8 +47,6 @@ function generateCurlFromSextantApiCall(path: string, data: any, sextantUrl: str
   async function sextantApiCall<T = any>(path: string, data: any): Promise<T | undefined> {
     const body = Bytes.from(JSON.stringify(data), 'utf8');
     const signature = sextantKey.signMessage(body);
-
-    console.log('Sextant API call:', { path, data, signature });
     
     const response = await fetch(sextantUrl + path, {
       body: JSON.stringify(data),
@@ -59,15 +57,10 @@ function generateCurlFromSextantApiCall(path: string, data: any, sextantUrl: str
       }
     });
 
-    console.log('Sextant API response status:', response.status);
-    console.log('Sextant API response:', JSON.stringify(response.body));
-    console.log('Sextant API response headers:', response.headers);
-
     if (response?.status !== 200) {
         let errorData: any
         try {
             errorData = await response.json()
-            console.log('Sextant API response error data:', JSON.stringify(errorData));
         } catch {
             throw new Error(`Unknown Sextant API error: ${response.status}`)
         }
@@ -93,15 +86,11 @@ export async function createTicket(code: string, productId: string, comment: str
 
 export async function verifyTicket(payload: CreateRequestType) {
     const request = CreateRequest.from(payload)
-    console.log({ request, payload })
-    console.log({ code: request.code })
     const ticket = await sextantApiCall('/tickets/verify', {
         code: request.code,
         deviceId: SEXTANT_DEVICE_UUID,
-        version: 'whalesplainer ' + (import.meta.env.PUBLIC_REV || 'dev')
+        version: 'account-creation-portal'
     })
-
-    console.log('Ticket verification result:', ticket);
 
     return ticket
 }
