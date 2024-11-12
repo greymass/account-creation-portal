@@ -83,22 +83,17 @@ export async function createTicket(code: string, productId: string, comment: str
     })
 }
 
-export async function verifyTicket(ticket: string) {
-    console.log('Verifying ticket:', ticket);
-    console.log('Making API call with params:', {
-        code: ticket,
-        deviceId: sextantDeviceUUID,
-        version: accountCreatorVersion
-    });
-
-    const result = await sextantApiCall('/tickets/verify', {
-        code: ticket,
-        deviceId: sextantDeviceUUID,
-        version: accountCreatorVersion
+export async function verifyTicket(payload: CreateRequestType) {
+    const request = CreateRequest.from(payload)
+    console.log({ request, payload })
+    console.log({ code: request.code })
+    const ticket = await sextantApiCall('/tickets/verify', {
+        code: request.code,
+        deviceId: SEXTANT_DEVICE_UUID,
+        version: 'whalesplainer ' + (import.meta.env.PUBLIC_REV || 'dev')
     })
 
-    console.log('Verify ticket API response:', result);
-    return result
+    return ticket
 }
 
 export async function checkAccountName(productId: string, accountName: NameType, ticket: string) {
