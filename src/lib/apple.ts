@@ -16,13 +16,29 @@ const COOKIE_NAME = "__Secure-authjs.session-token";
 async function generateClientSecret(): Promise<string> {
     // Ensure the key is in PEM format
     let pemKey = AUTH_APPLE_SECRET;
+    console.log('Initial pemKey:', AUTH_APPLE_SECRET);
+    
     if (!pemKey.includes('-----BEGIN PRIVATE KEY-----')) {
       pemKey = `-----BEGIN PRIVATE KEY-----\n${pemKey}\n-----END PRIVATE KEY-----`;
+      console.log('Formatted pemKey:', pemKey);
     }
   
+    console.log('Importing private key...');
     const privateKey = await jose.importPKCS8(pemKey, 'ES256');
+    console.log('Private key imported successfully');
     
     const now = Math.floor(Date.now() / 1000);
+    console.log('Current timestamp:', now);
+
+    console.log('JWT parameters:', {
+      kid: AUTH_APPLE_KEY_ID,
+      issuer: AUTH_APPLE_TEAM_ID,
+      subject: AUTH_APPLE_ID,
+      audience: 'https://appleid.apple.com',
+      issuedAt: now,
+      expirationTime: now + 3600
+    });
+
     const jwt = await new jose.SignJWT({})
       .setProtectedHeader({ alg: 'ES256', kid: AUTH_APPLE_KEY_ID})
       .setIssuer(AUTH_APPLE_TEAM_ID)
@@ -31,6 +47,8 @@ async function generateClientSecret(): Promise<string> {
       .setIssuedAt(now)
       .setExpirationTime(now + 3600) // 1 hour from now
       .sign(privateKey);
+    
+    console.log('Generated JWT:', jwt);
   
     return jwt;
   }
@@ -38,8 +56,18 @@ async function generateClientSecret(): Promise<string> {
 export async function exchangeCodeForTokens(code: string): Promise<{ id_token: string, access_token: string, refresh_token: string }> {
   const clientSecret = await generateClientSecret();
 
+  // console.log(`curl -X POST 'https://appleid.apple.com/auth/token' \\
+  //   -H 'Content-Type: application/x-www-form-urlencoded' \\
+  //   -d 'client_id=${AUTH_APPLE_ID}' \\
+  //   -d 'client_secret=${clientSecret}' \\
+  //   -d 'code=${code}' \\
+  //   -d 'grant_type=authorization_code' \\
+  //   -d 'redirect_uri=${redirectUrl}/auth/callback/apple'`);
+
+  // throw error(400, 'Failed to validate Apple authorization code');
+
   const tokenResponse = await fetch('https://appleid.apple.com/auth/token', {
-    method: 'POST',
+    method: 'POST', 
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
@@ -53,6 +81,19 @@ export async function exchangeCodeForTokens(code: string): Promise<{ id_token: s
   });
 
   if (!tokenResponse.ok) {
+    console.log({
+      client_id: AUTH_APPLE_ID,
+      client_secret: clientSecret,
+      code: code,
+      grant_type: 'authorization_code',
+      redirect_uri: `${redirectUrl}/auth/callback/apple`,
+    });
+    console.error('Failed to validate Apple authorization code:', {
+      status: tokenResponse.status,
+      statusText: tokenResponse.statusText,
+      headers: tokenResponse.headers,
+      body: await tokenResponse.text().catch(e => `Failed to read body: ${e}`),
+    });
     throw error(400, 'Failed to validate Apple authorization code');
   }
 

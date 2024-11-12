@@ -1,11 +1,11 @@
 <script lang="ts">
-  import type { StripeProduct } from '$lib/types';
-  import { loadStripe } from '@stripe/stripe-js';
-  import { signIn, signOut } from "@auth/sveltekit/client"
-  import type { Session } from '@auth/sveltekit';
-  import GoogleLogo from '../../assets/google-logo.svg';
-  import AppleLogo from '../../assets/apple-logo.svg';
-  import { t } from '../../lib/i18n';
+  import FAQ from "$lib/components/faq.svelte";
+
+  import type { StripeProduct } from "$lib/types";
+  import { loadStripe } from "@stripe/stripe-js";
+  import { signIn, signOut } from "@auth/sveltekit/client";
+  import type { Session } from "@auth/sveltekit";
+  import { t } from "../../lib/i18n";
 
   interface CreateRequestArguments {
     login_scope: string | null;
@@ -32,10 +32,10 @@
       searchParams: data.searchParams,
     });
 
-    const res = await fetch('/api/stripe/session', {
+    const res = await fetch("/api/stripe/session", {
       body,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' }
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
     });
 
     if (!res.ok) {
@@ -54,18 +54,20 @@
   function handleBuy(event: Event): void {
     event.preventDefault();
     buyError = undefined;
-    buy()
-      .catch((err: Error) => {
-        buyError = err.message;
-      });
+    buy().catch((err: Error) => {
+      buyError = err.message;
+    });
   }
 
-  function formatPrice(amount: number, currency = 'USD'): string {
-    return (amount / 100).toLocaleString('en-US', { style: 'currency', currency });
+  function formatPrice(amount: number, currency = "USD"): string {
+    return (amount / 100).toLocaleString("en-US", {
+      style: "currency",
+      currency,
+    });
   }
 
   function handleLogout() {
-    signOut({ callbackUrl: '/buy' });
+    signOut({ callbackUrl: "/buy" });
   }
 
   function handleGetFreeAccount(event: SubmitEvent) {
@@ -75,105 +77,167 @@
   }
 </script>
 
-<div class="flex items-center justify-center min-h-screen">
-  <div class="container mx-auto px-4 py-8 max-w-2xl">
-    <h1 class="text-4xl font-bold mb-6 text-center">{$t('Create New Account')}</h1>
-    
-    {#if data.session === undefined}
-      <div class="bg-white shadow rounded-lg p-6 mb-4 text-center">
-        <h3 class="text-xl font-semibold mb-2">{$t('Checking Login Status')}</h3>
-        <div class="loader w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
-        <p>{$t('Please wait while we verify your login status...')}</p>
-      </div>
-    {:else if data.session}
-      <div class="bg-white shadow rounded-lg p-6 mb-4">
-        <div class="flex justify-between items-center">
-          <div>
-            <h3 class="text-xl font-semibold">{$t('Logged in as {name}', { name: data.session.user?.name ?? '' })}</h3>
-            {#if data.session.user?.name !== data.session.user?.email}
-              <p class="text-sm text-gray-600">{data.session.user?.email}</p>
-            {/if}
-          </div>
-          <button 
-            on:click={handleLogout}
-            class="px-4 py-2 text-sm bg-red-500 text-white rounded hover:bg-red-600 transition duration-300"
-          >
-            {$t('Logout')}
-          </button>
-        </div>
-      </div>
+<div class="pb-6 pt-10 sm:pt-20 sm:pb-10">
+  <div
+    class="w-[68px] h-[96px] m-auto bg-[url('/images/logo-eos.svg')] dark:bg-[url('/images/logo-eos-dark.svg')]"
+  />
+  <h1 class="text-center mt-5">{$t("Create New EOS Account")}</h1>
+</div>
 
-      {#if data.canGetFreeAccount}
-        <div class="bg-green-100 border border-green-400 rounded-lg p-6 mb-4">
-          <h3 class="text-xl font-semibold mb-2">{$t('Free Account Available!')}</h3>
-          <p class="mb-4">{$t('Great news! You\'re eligible for a free account.')}</p>
+{#if data.session === undefined}
+  <div class="p-0 pt-6 sm:py-10 sm:px-5">
+    <div
+      class="space-y-2 text-center rounded-lg ring-1 ring-slate-700/5 shadow p-6 sm:py-5 sm:px-10 dark:bg-slate-800"
+    >
+      <h3>{$t("Checking Login Status")}</h3>
+      <div
+        class="loader w-5 h-5 border-2 border-[#2D8EFF] border-t-transparent rounded-full animate-spin mx-auto"
+      ></div>
+      <p>{$t("Please wait while we verify your login status...")}</p>
+    </div>
+  </div>
+{:else if data.session}
+  <div class="p-0 pt-6 space-y-12 sm:py-10 sm:px-5 sm:space-y-5">
+    <div
+      class="block space-y-5 sm:flex sm:justify-between sm:items-center sm:space-y-0"
+    >
+      <div class="space-y-3">
+        <h3>
+          {$t("Logged in as {name}", {
+            name: data.session.user?.name ?? "",
+          })}
+        </h3>
+        {#if data.session.user?.name !== data.session.user?.email}
+          <p>{data.session.user?.email}</p>
+        {/if}
+      </div>
+      <button
+        on:click={handleLogout}
+        class="btn-primary bg-[#FF0000] dark:bg-[#FF1A1A"
+      >
+        {$t("Log out")}
+      </button>
+    </div>
+
+    {#if data.canGetFreeAccount}
+      <div
+        class="rounded-[20px] p-6 sm:py-5 sm:px-10 bg-[#DEFFEB] dark:bg-[#003A16] border border-[#7DFFB3] dark:border-[#7DFFB3]"
+      >
+        <div class="space-y-5 text-center">
+          <div>
+            <h3>{$t("Free Account Available!")}</h3>
+            <p class="mt-2">
+              {$t("Great news! You're eligible for a free account.")}
+            </p>
+          </div>
           <form method="POST" action="/ticket" on:submit={handleGetFreeAccount}>
-            <input type="hidden" name="searchParams" value={data.searchParams} />
-            <button 
+            <input
+              type="hidden"
+              name="searchParams"
+              value={data.searchParams}
+            />
+            <button
               type="submit"
-              class="w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition duration-300 flex items-center justify-center"
+              class="btn-primary flex items-center justify-center w-full bg-[#00B44B] dark:bg-[#00CD55]"
               disabled={isLoading}
             >
               {#if isLoading}
-                <span class="loader w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></span>
+                <span
+                  class="loader w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"
+                ></span>
               {/if}
-              {isLoading ? $t('Processing...') : $t('Get Free Account')}
+              {isLoading ? $t("Processing...") : $t("Get Free Account")}
+              {#if !isLoading}
+                &rarr;
+              {/if}
             </button>
           </form>
         </div>
-      {:else}
-        <div class="bg-yellow-100 border border-yellow-400 rounded-lg p-6 mb-4">
-          <h3 class="text-xl font-semibold mb-2">{$t('Free Account Unvailable')}</h3>
-          <p>{$t("You're not eligible for a free account at this time. You can purchase an account below, or sign in with another account.")}</p>
-        </div>
-      {/if}
+      </div>
     {:else}
-      <div class="bg-white shadow rounded-lg p-6 mb-4">
-        <h3 class="text-xl font-semibold mb-4">{$t('Sign in to get a free account')}</h3>
-        <div class="space-y-3">
-          <button 
-            on:click={() => signIn("google", { callbackUrl: `/buy?${data.searchParams}`})}
-            class="w-full px-4 py-2 bg-[#4285F4] text-white rounded hover:bg-[#357AE8] transition duration-300 flex items-center justify-center"
-          >
-            <img src={GoogleLogo} alt="Google Logo" class="w-5 h-5 mr-2" />
-            {$t('Sign in with Google')}
-          </button>
-          <button 
-            on:click={() => signIn("apple", { callbackUrl: `/buy?${data.searchParams}`})}
-            class="w-full px-4 py-2 bg-black text-white rounded hover:bg-gray-800 transition duration-300 flex items-center justify-center"
-          >
-            <img src={AppleLogo} alt="Apple Logo" class="w-5 h-5 mr-2" />
-            {$t('Sign in with Apple')}
-          </button>
-        </div>
+      <div
+        class="rounded-[20px] p-6 sm:py-5 sm:px-10 bg-[#FFE6B1] border border-[#FFAD00] dark:bg-[#674600] dark:border-[#FFB61A]"
+      >
+        <h3>{$t("Free Account Unavailable")}</h3>
+        <p class="mt-2">
+          {$t("You're not eligible for a free account at this time.")}
+        </p>
+        <p class="mt-1">
+          {$t(
+            "You can purchase an account below, or sign in with another account to check again.",
+          )}
+        </p>
       </div>
-    {/if}
-
-    {#if !data.canGetFreeAccount}
-      <div class="bg-white shadow rounded-lg p-6 mb-4">
-        <h3 class="text-xl font-semibold mb-4">{$t('Buy an account')}</h3>
-        <p class="mb-4">{$t('Create a {productName} for {price}', { 
-          productName: data.stripeProduct.product.name, 
-          price: formatPrice(data.stripeProduct.price.unit_amount, data.stripeProduct.price.currency)
-        })}</p>
-        <button 
-          on:click={handleBuy}
-          class="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300"
-        >
-          {$t('Continue to Payment')} &rarr;
-        </button>
-      </div>
-    {/if}
-    
-    <noscript>
-      <p class="text-red-500 text-center">
-        {$t('Sorry, our payment processor Stripe requires JavaScript to be enabled to function.')}
-      </p>
-    </noscript>
-    {#if buyError}
-      <p class="text-red-500 text-center">
-        <strong>{$t('ERROR')}:</strong> {buyError}
-      </p>
     {/if}
   </div>
-</div>
+{:else}
+  <div class="px-0 py-6 sm:py-10 sm:px-5 space-y-5">
+    <h3>{$t("Sign in to get a free account")}</h3>
+    <div
+      class="block space-x-0 space-y-4 sm:flex sm:justify-between sm:items-center sm:space-x-5 sm:space-y-0"
+    >
+      <button
+        on:click={() =>
+          signIn("google", { callbackUrl: `/buy?${data.searchParams}` })}
+        class="flex items-center justify-center btn-white w-full text-xl font-medium drop-shadow"
+      >
+        <span class="w-6 h-6 mr-3 bg-[url('/images/logo-google.svg')]" />
+        {$t("Continue with Google")}
+      </button>
+      <button
+        on:click={() =>
+          signIn("apple", { callbackUrl: `/buy?${data.searchParams}` })}
+        class="flex items-center justify-center btn-black text-xl font-medium drop-shadow w-full"
+      >
+        <span
+          class="w-6 h-6 mr-3 bg-[url('/images/logo-apple.svg')] dark:bg-[url('/images/logo-apple-dark.svg')]"
+        />
+        {$t("Continue with Apple")}
+      </button>
+    </div>
+  </div>
+{/if}
+
+{#if !data.canGetFreeAccount}
+  <hr class="my-5" />
+  <div
+    class="px-0 py-6 block space-y-5 sm:flex sm:justify-between sm:items-center sm:py-10 sm:px-5 sm:space-y-0"
+  >
+    <div class="space-y-3">
+      <h3>{$t("Buy an account")}</h3>
+      <p>
+        {$t("Create a {productName} for {price}", {
+          productName: data.stripeProduct.product.name,
+          price: formatPrice(
+            data.stripeProduct.price.unit_amount,
+            data.stripeProduct.price.currency,
+          ),
+        })}
+      </p>
+    </div>
+    <button
+      on:click={handleBuy}
+      class="btn-primary bg-[#2D8EFF] dark:bg-[#479DFF]"
+    >
+      {$t("Continue to Payment")} &rarr;
+    </button>
+  </div>
+{/if}
+
+<noscript>
+  <p class="text-red-500 text-center">
+    {$t(
+      "Sorry, our payment processor Stripe requires JavaScript to be enabled to function.",
+    )}
+  </p>
+</noscript>
+{#if buyError}
+  <div class="py-5 px-3">
+    <p class="text-red-500 text-center">
+      <strong>ERROR:</strong>
+      {buyError}
+    </p>
+  </div>
+{/if}
+<hr class="my-5" />
+<FAQ />
