@@ -66,6 +66,7 @@ function generateCurlFromSextantApiCall(path: string, data: any, sextantUrl: str
         }
         throw new SextantError(errorData, response.status)
     }
+
     if (
         response.headers.get('Content-Type') &&
         response.headers.get('Content-Type')?.startsWith('application/json')
@@ -87,8 +88,8 @@ export async function verifyTicket(payload: CreateRequestType) {
     const request = CreateRequest.from(payload)
     const ticket = await sextantApiCall('/tickets/verify', {
         code: request.code,
-        deviceId: sextantDeviceUUID,
-        version: accountCreatorVersion
+        deviceId: SEXTANT_DEVICE_UUID,
+        version: 'account-creation-portal'
     })
 
     return ticket

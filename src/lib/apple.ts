@@ -81,13 +81,6 @@ export async function exchangeCodeForTokens(code: string): Promise<{ id_token: s
   });
 
   if (!tokenResponse.ok) {
-    console.log({
-      client_id: AUTH_APPLE_ID,
-      client_secret: clientSecret,
-      code: code,
-      grant_type: 'authorization_code',
-      redirect_uri: `${redirectUrl}/auth/callback/apple`,
-    });
     console.error('Failed to validate Apple authorization code:', {
       status: tokenResponse.status,
       statusText: tokenResponse.statusText,

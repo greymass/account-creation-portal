@@ -15,10 +15,12 @@ async function loadTicket(fetch: typeof window.fetch, ticket: string) {
     return ticketData
 }
 
-export const load: Load = async ({ fetch, params, url }) => {
+export const load: Load = async ({ fetch, params, url }) => {    
     if (!params.ticket) {
+        console.log('No ticket provided, redirecting to /buy');
         return redirect(302, '/buy')
     }
+    
     const ticketData = await loadTicket(fetch, params.ticket)
 
     const ownerKey = url.searchParams.get('owner_key')
