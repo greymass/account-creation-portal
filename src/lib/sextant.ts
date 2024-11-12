@@ -47,6 +47,8 @@ function generateCurlFromSextantApiCall(path: string, data: any, sextantUrl: str
   async function sextantApiCall<T = any>(path: string, data: any): Promise<T | undefined> {
     const body = Bytes.from(JSON.stringify(data), 'utf8');
     const signature = sextantKey.signMessage(body);
+
+    console.log('Sextant API call:', { path, data, signature });
     
     const response = await fetch(sextantUrl + path, {
       body: JSON.stringify(data),
@@ -57,15 +59,21 @@ function generateCurlFromSextantApiCall(path: string, data: any, sextantUrl: str
       }
     });
 
+    console.log('Sextant API response status:', response.status);
+    console.log('Sextant API response:', JSON.stringify(response.body));
+    console.log('Sextant API response headers:', response.headers);
+
     if (response?.status !== 200) {
         let errorData: any
         try {
             errorData = await response.json()
+            console.log('Sextant API response error data:', JSON.stringify(errorData));
         } catch {
             throw new Error(`Unknown Sextant API error: ${response.status}`)
         }
         throw new SextantError(errorData, response.status)
     }
+
     if (
         response.headers.get('Content-Type') &&
         response.headers.get('Content-Type')?.startsWith('application/json')
@@ -92,6 +100,8 @@ export async function verifyTicket(payload: CreateRequestType) {
         deviceId: SEXTANT_DEVICE_UUID,
         version: 'whalesplainer ' + (import.meta.env.PUBLIC_REV || 'dev')
     })
+
+    console.log('Ticket verification result:', ticket);
 
     return ticket
 }
