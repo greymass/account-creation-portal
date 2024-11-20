@@ -78,8 +78,10 @@
 </script>
 
 <div class="pb-6 pt-10 sm:pt-20 sm:pb-10">
-  <div
-    class="w-[68px] h-[96px] m-auto bg-[url('/images/logo-eos.svg')] dark:bg-[url('/images/logo-eos-dark.svg')]"
+  <img
+    src="https://assets.wharfkit.com/chain/eos.png"
+    alt="EOS Logo"
+    class="w-[68px] m-auto"
   />
   <h1 class="text-center mt-5">{$t("Create New EOS Account")}</h1>
 </div>
