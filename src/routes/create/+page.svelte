@@ -67,6 +67,9 @@
       const { nameAvailable: availability } = await result.json();
 
       nameAvailable.set(availability);
+      if (!availability) {
+        error.set($t("This account name is not available."));
+      }
     } catch (err) {
       error.set($t("Error checking account name availability"));
     } finally {
@@ -77,6 +80,23 @@
   function handleAccountNameInput(event: Event) {
     const target = event.target as HTMLInputElement;
     const name = target.value.trim().toLowerCase();
+    
+    // Validate account name length
+    if (name.length > 9) {
+      error.set($t("Account name must be 9 characters or less"));
+      nameAvailable.set(false);
+      accountName.set(name);
+      return;
+    }
+
+    // Check if name contains only allowed characters (a-z and 1-5)
+    if (!/^[a-z1-5]*$/.test(name)) {
+      error.set($t("Account name can only contain letters a-z and numbers 1-5"));
+      nameAvailable.set(false);
+      accountName.set(name);
+      return;
+    }
+
     accountName.set(name);
 
     clearTimeout(debounceTimeout);
@@ -152,23 +172,7 @@
 </script>
 
 <div class="mx-auto max-w-md p-4 flex items-center justify-center h-full">
-  {#if $keysMissing}
-    <div
-      class="bg-surface-100-800-token p-6 rounded-lg shadow-lg w-full ring-1 ring-slate-900/5 dark:bg-slate-800"
-      in:fade={{ duration: 300 }}
-    >
-      <h2 class="mb-4">
-        {$t("To create an account using Anchor")}
-      </h2>
-      <p class="mb-4">
-        {$t(
-          "To create an account using Anchor, please provide the following code:",
-        )}
-      </p>
-      <pre
-        class="bg-surface-200-700-token p-4 rounded-md overflow-x-auto">{code}</pre>
-    </div>
-  {:else if $accountCreated}
+  {#if $accountCreated}
     <div
       class="bg-surface-100-800-token p-8 rounded-lg shadow-lg flex flex-col items-center text-center w-full ring-1 ring-slate-900/5 dark:bg-slate-800"
       in:fly={{ y: 20, duration: 500 }}
@@ -210,28 +214,21 @@
 
         {#if $error}
           <p
-            class="text-red-500 mt-2 flex items-center"
+            class="text-red-500 mt-2 flex items-start"
             in:fly={{ y: -10, duration: 300 }}
           >
-            <AlertCircle size={16} class="mr-1" />
-            {$error}
+            <AlertCircle size={16} class="mr-1 mt-1" />
+            <span class="flex-1">{$error}</span>
           </p>
         {/if}
 
-        {#if $nameAvailable !== null}
+        {#if $nameAvailable !== null && $nameAvailable}
           <p
-            class="mt-2 flex items-center"
-            class:text-green-500={$nameAvailable}
-            class:text-red-500={!$nameAvailable}
+            class="mt-2 flex items-center text-green-500"
             in:fly={{ y: -10, duration: 300 }}
           >
-            {#if $nameAvailable}
-              <CircleCheck size={16} class="mr-1" />
-              {$t("This account name is available.")}
-            {:else}
-              <AlertCircle size={16} class="mr-1" />
-              {$t("This account name is not available.")}
-            {/if}
+            <CircleCheck size={16} class="mr-1" />
+            {$t("This account name is available.")}
           </p>
         {/if}
       </div>
