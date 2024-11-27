@@ -4,8 +4,8 @@
   import { fade, fly } from "svelte/transition";
   import type { Product } from "$lib/types";
   import { t } from "$lib/i18n";
+  import { validName } from "$lib/helpers";
   import { Check, AlertCircle, CircleCheck, Loader2 } from "lucide-svelte";
-	import { validName } from "$lib/helpers";
 
   interface PageData {
     code: string;
