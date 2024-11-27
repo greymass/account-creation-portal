@@ -5,6 +5,7 @@
   import type { Product } from "$lib/types";
   import { t } from "$lib/i18n";
   import { Check, AlertCircle, CircleCheck, Loader2 } from "lucide-svelte";
+	import { validName } from "$lib/helpers";
 
   interface PageData {
     code: string;
@@ -90,7 +91,7 @@
     }
 
     // Check if name contains only allowed characters (a-z and 1-5)
-    if (!/^[a-z1-5]*$/.test(name)) {
+    if (!validName(name)) {
       error.set($t("Account name can only contain letters a-z and numbers 1-5"));
       nameAvailable.set(false);
       accountName.set(name);
