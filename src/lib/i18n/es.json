@@ -22,5 +22,7 @@
   "Failed to create account: {reason}": "No se pudo crear la cuenta: {reason}",
   "Error creating account": "Error al crear la cuenta",
   "Error creating account: {reason}": "Error al crear la cuenta: {reason}",
-  "Unknown error": "Error desconocido"
+  "Unknown error": "Error desconocido",
+  "Account name must be 9 characters or less": "El nombre de la cuenta debe tener 9 caracteres o menos",
+  "Account name can only contain letters a-z and numbers 1-5": "El nombre de la cuenta solo puede contener letras a-z y números 1-5"
 }

@@ -26,5 +26,7 @@
   "Sign in to get a free account": "Sign in to get a free account",
   "Free Account Unavailable": "Free Account Unavailable",
   "You're not eligible for a free account at this time.": "You're not eligible for a free account at this time.",
-  "You can purchase an account below, or sign in with another account.": "You can purchase an account below, or sign in with another account."
+  "You can purchase an account below, or sign in with another account.": "You can purchase an account below, or sign in with another account.",
+  "Account name must be 9 characters or less": "Account name must be 9 characters or less",
+  "Account name can only contain letters a-z and numbers 1-5": "Account name can only contain letters a-z and numbers 1-5"
 }
