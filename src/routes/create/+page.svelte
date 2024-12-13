@@ -148,6 +148,10 @@
                 "*",
               );
             }
+
+            if (window.ReactNativeWebView) {
+              window.ReactNativeWebView.postMessage(`${accountNameValue}.gm`);
+            }
           } else {
             console.error($t("Failed to create account"), result);
             error.set(
