@@ -152,6 +152,16 @@
             if (window.ReactNativeWebView) {
               window.ReactNativeWebView.postMessage(`${accountNameValue}.gm`);
             }
+
+            if (
+              window.webkit &&
+              window.webkit.messageHandlers &&
+              window.webkit.messageHandlers.nativeListener
+            ) {
+              window.webkit.messageHandlers.nativeListener.postMessage(
+                "Hello from JavaScript!"
+              );
+            }
           } else {
             console.error($t("Failed to create account"), result);
             error.set(
