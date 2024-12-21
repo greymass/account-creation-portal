@@ -15,7 +15,6 @@ const accountCreatorVersion = ACCOUNT_CREATOR_VERSION || 'account-creation-porta
 const stripeProductId = STRIPE_PRODUCT_ID
 const unlimitedAccountsPerEmail = UNLIMITED_ACCOUNTS_PER_EMAIL === 'true'
 
-
 export class SextantError extends Error {
     code: number
     reason: string
@@ -96,6 +95,10 @@ export async function checkAccountName(productId: string, accountName: NameType,
 }
 
 export async function freeAccountAvailable(email: string) {
+    if (unlimitedAccountsPerEmail) {
+        return true
+    }
+
     try {
         await sextantApiCall('/tickets/free', {
             email
