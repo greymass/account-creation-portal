@@ -1,7 +1,7 @@
 /** Sextant API helpers, backend only. */
 
 import { Bytes, Checksum256, PrivateKey } from '@wharfkit/antelope'
-import { SEXTANT_URL, SEXTANT_DEVICE_UUID, SEXTANT_KEY, ACCOUNT_CREATOR_VERSION, BUOY_SERVICE_URL, STRIPE_PRODUCT_ID, SEXTANT_PRODUCT_ID } from '$env/static/private'
+import { SEXTANT_URL, SEXTANT_DEVICE_UUID, SEXTANT_KEY, ACCOUNT_CREATOR_VERSION, BUOY_SERVICE_URL, STRIPE_PRODUCT_ID, SEXTANT_PRODUCT_ID, UNLIMITED_ACCOUNTS_PER_EMAIL } from '$env/static/private'
 import type { NameType, PublicKeyType } from '@wharfkit/antelope'
 import { CreateRequest, type CreateRequestArguments, type CreateRequestType } from '@greymass/account-creation'
 import { randomCode } from './helpers'
@@ -13,6 +13,7 @@ const sextantKey = PrivateKey.from(SEXTANT_KEY || 'PVT_K1_2VbtWei9iPNJWDkzSdrJG1
 const buoyServiceUrl = new URL(BUOY_SERVICE_URL || 'https://cb.anchor.link')
 const accountCreatorVersion = ACCOUNT_CREATOR_VERSION || 'account-creation-portal'
 const stripeProductId = STRIPE_PRODUCT_ID
+const unlimitedAccountsPerEmail = UNLIMITED_ACCOUNTS_PER_EMAIL === 'true'
 
 export class SextantError extends Error {
     code: number
@@ -23,28 +24,8 @@ export class SextantError extends Error {
         this.reason = data.reason
     }
 }
-
-function generateCurlFromSextantApiCall(path: string, data: any, sextantUrl: string, sextantKey: any): string {
-    const body = Bytes.from(JSON.stringify(data), 'utf8');
-    const signature = sextantKey.signMessage(body);
   
-    let curlCommand = `curl '${sextantUrl}${path}'`;
-  
-    // Method
-    curlCommand += ` -X POST`;
-  
-    // Headers
-    curlCommand += ` -H 'Content-Type: application/json'`;
-    curlCommand += ` -H 'X-Request-Sig: ${String(signature)}'`;
-  
-    // Body
-    curlCommand += ` -d '${JSON.stringify(data)}'`;
-  
-    return curlCommand;
-  }
-  
-  // Usage example
-  async function sextantApiCall<T = any>(path: string, data: any): Promise<T | undefined> {
+async function sextantApiCall<T = any>(path: string, data: any): Promise<T | undefined> {
     const body = Bytes.from(JSON.stringify(data), 'utf8');
     const signature = sextantKey.signMessage(body);
     
@@ -80,7 +61,7 @@ export async function createTicket(code: string, productId: string, comment: str
         code,
         productId,
         comment,
-        email,
+        email: unlimitedAccountsPerEmail ? undefined : email,
     })
 }
 
@@ -114,6 +95,10 @@ export async function checkAccountName(productId: string, accountName: NameType,
 }
 
 export async function freeAccountAvailable(email: string) {
+    if (unlimitedAccountsPerEmail) {
+        return true
+    }
+
     try {
         await sextantApiCall('/tickets/free', {
             email
