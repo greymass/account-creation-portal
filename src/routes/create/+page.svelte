@@ -159,7 +159,7 @@
               window.webkit.messageHandlers.nativeListener
             ) {
               window.webkit.messageHandlers.nativeListener.postMessage(
-                "Hello from JavaScript!"
+                `${accountNameValue}.gm`
               );
             }
           } else {
