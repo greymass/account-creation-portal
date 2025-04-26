@@ -83,7 +83,7 @@
     alt="Vaulta Logo"
     class="w-[68px] m-auto"
   />
-  <h1 class="text-center mt-5">{$t("Create New EOS Account")}</h1>
+  <h1 class="text-center mt-5">{$t("Create New Vaulta Account")}</h1>
 </div>
 
 {#if data.session === undefined}
