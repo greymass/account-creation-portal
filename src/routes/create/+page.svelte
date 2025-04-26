@@ -213,7 +213,7 @@
     >
       <h1 class="mb-6">{$t("Create New Account")}</h1>
 
-      <p class="mb-4">{$t("Enter the desired EOS account name:")}</p>
+      <p class="mb-4">{$t("Enter the desired Vaulta account name:")}</p>
 
       <div class="mb-6 relative">
         <input

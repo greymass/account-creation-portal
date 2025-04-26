@@ -8,45 +8,45 @@
 	}
 	const faqArray: FAQ[] = [
 		{
-			title: $t("What is EOS?"),
+			title: $t("What is Vaulta?"),
 			content: $t(
-				"EOS is a blockchain platform designed for decentralized applications (dApps).",
+				"Vaulta is a blockchain platform designed for decentralized applications (dApps).",
 			),
 		},
 		{
-			title: $t("Why do I need an EOS account?"),
+			title: $t("Why do I need an Vaulta account?"),
 			content: $t(
-				"An EOS account is necessary to interact with the EOS blockchain, use dApps, and manage EOS tokens.",
+				"An Vaulta account is necessary to interact with the Vaulta blockchain, use dApps, and manage Vaulta tokens.",
 			),
 		},
 		{
-			title: $t("Are there different ways to create an EOS account?"),
+			title: $t("Are there different ways to create an Vaulta account?"),
 			content: $t(
 				"Yes, typically you can create an account for free through certain platforms or purchase an account.",
 			),
 		},
 		{
-			title: $t("What information do I need to create an EOS account?"),
+			title: $t("What information do I need to create an Vaulta account?"),
 			content: $t(
 				"Generally, you'll need to provide an email address and create a password. Some methods may require additional verification.",
 			),
 		},
 		{
-			title: $t("Are EOS accounts free?"),
+			title: $t("Are Vaulta accounts free?"),
 			content: $t(
 				"Some platforms offer free account creation, while others may charge a small fee.",
 			),
 		},
 		{
-			title: $t("Can I create multiple EOS accounts?"),
+			title: $t("Can I create multiple Vaulta accounts?"),
 			content: $t(
-				"Yes, you can create multiple EOS accounts, but each requires a separate creation process.",
+				"Yes, you can create multiple Vaulta accounts, but each requires a separate creation process.",
 			),
 		},
 		{
-			title: $t("What should I do after creating an EOS account?"),
+			title: $t("What should I do after creating an Vaulta account?"),
 			content: $t(
-				"After creation, secure your account keys, explore EOS wallets, and familiarize yourself with EOS resources and bandwidth.",
+				"After creation, secure your account keys, explore Vaulta wallets, and familiarize yourself with Vaulta resources and bandwidth.",
 			),
 		},
 	];

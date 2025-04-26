@@ -1,5 +1,5 @@
 {
-  "Create New EOS Account": "Créer un nouveau compte EOS",
+  "Create New EOS Account": "Créer un nouveau compte Vaulta",
   "Log out": "Se déconnecter",
   "Checking Login Status": "Vérification du statut de connexion",
   "Please wait while we verify your login status...": "Veuillez patienter pendant que nous vérifions votre statut de connexion...",
@@ -7,7 +7,7 @@
   "To create an account using Anchor, please provide the following code:": "Pour créer un compte en utilisant Anchor, veuillez fournir le code suivant :",
   "Account Created Successfully!": "Compte Créé avec Succès !",
   "Your account was created successfully. You can now use this account on the wallet that generated the private keys.": "Votre compte a été créé avec succès. Vous pouvez maintenant utiliser ce compte sur le portefeuille qui a généré les clés privées.",
-  "Enter the desired EOS account name:": "Entrez le nom de compte EOS souhaité :",
+  "Enter the desired EOS account name:": "Entrez le nom de compte Vaulta souhaité :",
   "Enter account name": "Entrez le nom du compte",
   "This account name is available.": "Ce nom de compte est disponible.",
   "This account name is not available.": "Ce nom de compte n'est pas disponible.",

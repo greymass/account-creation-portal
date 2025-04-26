@@ -79,8 +79,8 @@
 
 <div class="pb-6 pt-10 sm:pt-20 sm:pb-10">
   <img
-    src="https://assets.wharfkit.com/chain/eos.png"
-    alt="EOS Logo"
+    src="https://assets.wharfkit.com/chain/vaulta.png"
+    alt="Vaulta Logo"
     class="w-[68px] m-auto"
   />
   <h1 class="text-center mt-5">{$t("Create New EOS Account")}</h1>
