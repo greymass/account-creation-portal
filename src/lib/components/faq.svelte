@@ -16,17 +16,17 @@
 		{
 			title: $t("Why do I need an Vaulta account?"),
 			content: $t(
-				"An Vaulta account is necessary to interact with the Vaulta blockchain, use dApps, and manage Vaulta tokens.",
+				"A Vaulta account is necessary to interact with the Vaulta blockchain, use dApps, and manage Vaulta tokens.",
 			),
 		},
 		{
-			title: $t("Are there different ways to create an Vaulta account?"),
+			title: $t("Are there different ways to create a Vaulta account?"),
 			content: $t(
 				"Yes, typically you can create an account for free through certain platforms or purchase an account.",
 			),
 		},
 		{
-			title: $t("What information do I need to create an Vaulta account?"),
+			title: $t("What information do I need to create a Vaulta account?"),
 			content: $t(
 				"Generally, you'll need to provide an email address and create a password. Some methods may require additional verification.",
 			),
@@ -44,7 +44,7 @@
 			),
 		},
 		{
-			title: $t("What should I do after creating an Vaulta account?"),
+			title: $t("What should I do after creating a Vaulta account?"),
 			content: $t(
 				"After creation, secure your account keys, explore Vaulta wallets, and familiarize yourself with Vaulta resources and bandwidth.",
 			),
