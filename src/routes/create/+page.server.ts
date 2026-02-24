@@ -19,6 +19,8 @@ function loadTicket(fetch: typeof window.fetch, ticket: string) {
 export const load: ServerLoad = async ({ url, fetch, cookies }) => {
     const ticket = url.searchParams.get('ticket');
 
+    const params = new URLSearchParams(url.searchParams);
+
     if (!ticket) {
         throw redirect(302, '/buy');
     }
@@ -28,27 +30,25 @@ export const load: ServerLoad = async ({ url, fetch, cookies }) => {
         ticketData = await loadTicket(fetch, ticket);
     } catch (error: SextantError | unknown) {
         console.error('Error loading ticket:', error)
-        
-        throw redirect(302, '/buy');
+
+        throw redirect(302, `/buy?${params.toString()}`);
     }
 
-    // Get current search params
-    let currentSearchParams = new URLSearchParams(url.searchParams);
-
     // If owner_key or active_key are missing, try to get them from the cookie
-    if (!currentSearchParams.get('owner_key') || !currentSearchParams.get('active_key')) {
+    if (!params.get('owner_key') || !params.get('active_key')) {
         const storedParams = cookies.get(SEARCH_PARAMS_COOKIE);
 
         if (storedParams) {
             const cookieParams = new URLSearchParams(storedParams);
-            currentSearchParams.set('owner_key', cookieParams.get('owner_key')!);
-            currentSearchParams.set('active_key', cookieParams.get('active_key')!);
+            params.set('owner_key', cookieParams.get('owner_key')!);
+            params.set('active_key', cookieParams.get('active_key')!);
         }
     }
 
-    if (!ticketData || !currentSearchParams.get('owner_key') || !currentSearchParams.get('active_key')) {
+    if (!ticketData || !params.get('owner_key') || !params.get('active_key')) {
         console.error('Missing keys so redirecting to buy page');
-        throw redirect(302, '/buy');
+
+        throw redirect(302, `/buy?${params.toString()}`);
     }
 
     const response = await fetch(`/api/stripe/product`)
@@ -58,6 +58,6 @@ export const load: ServerLoad = async ({ url, fetch, cookies }) => {
     return {
         ticket,
         product: stripeProduct.product,
-        searchParams: currentSearchParams.toString()
+        searchParams: params.toString()
     };
 };
