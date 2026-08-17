@@ -56,13 +56,16 @@ async function sextantApiCall<T = any>(path: string, data: any): Promise<T | und
     }
 }
 
+/** Returns the authoritative ticket code, which differs from the submitted one when Sextant reuses an existing ticket. */
 export async function createTicket(code: string, productId: string, comment: string, email?: string) {
-    await sextantApiCall('/tickets/new', {
+    const result = await sextantApiCall<{ code?: string }>('/tickets/new', {
         code,
         productId,
         comment,
         email: unlimitedAccountsPerEmail ? undefined : email,
     })
+
+    return result?.code ?? code
 }
 
 export async function verifyTicket(payload: CreateRequestType) {
@@ -137,8 +140,11 @@ export function createAccount(payload: CreateAccountRequest) {
     })
 }
 
-export function generateCreationRequest(createRequestArguments: Partial<CreateRequestArguments> = {}) {
-    const code = randomCode()
+export function generateCreationRequest(
+    createRequestArguments: Partial<CreateRequestArguments> = {},
+    code: string = randomCode()
+) {
+    // The buoy channel is derived from the code.
     const codeHash = Checksum256.hash(Bytes.from(code, 'utf8')).hexString
     const loginUrl = `${buoyServiceUrl.origin}/${codeHash}`
 
