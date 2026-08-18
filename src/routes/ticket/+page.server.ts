@@ -24,12 +24,18 @@ export const actions: Actions = {
     const createRequest: CreateRequest = generateCreationRequest(createRequestArguments)
     const sextantProductId = await getSextantProductId();
 
-    await createTicket(createRequest.code, sextantProductId, 'free account - google login', session.user?.email ?? undefined);
+    const issuedCode = await createTicket(createRequest.code, sextantProductId, 'free account - google login', session.user?.email ?? undefined);
+
+    // Sextant hands back a stored code when it reuses an unspent ticket; the submitted one was never persisted.
+    const ticket: CreateRequest =
+        issuedCode === createRequest.code
+            ? createRequest
+            : generateCreationRequest(createRequestArguments, issuedCode)
 
     if (searchParams.get('owner_key') || searchParams.get('active_key')) {
-        redirect(302, `/create?ticket=${createRequest.toString(false)}&${searchParams}`);
+        redirect(302, `/create?ticket=${ticket.toString(false)}&${searchParams}`);
     } else {
-        return redirect(302, `${PUBLIC_WHALESPLAINER_URL}/activate/${createRequest.toString(false)}`)
+        return redirect(302, `${PUBLIC_WHALESPLAINER_URL}/activate/${ticket.toString(false)}`)
     }
   },
 };
